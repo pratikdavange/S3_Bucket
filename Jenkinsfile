@@ -23,21 +23,19 @@ pipeline {
     }
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('AKIAZQ3DSP3IEVYZO5L6')  // Replace with Jenkins credentials ID
-        AWS_SECRET_ACCESS_KEY = credentials('neEHr6elhDUU3dTaEyAOR+8xl07finjWHz7Xd5UX') // Replace with Jenkins credentials ID
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')  // Replace with Jenkins credentials ID
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key') // Replace with Jenkins credentials ID
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                // Clone the Terraform code from your GitHub repository
                 git branch: 'main', url: 'https://github.com/pratikdavange/S3_Bucket.git'  // Replace with your repo URL
             }
         }
 
         stage('Terraform Init') {
             steps {
-                // Initialize Terraform
                 sh '''
                 terraform init
                 '''
@@ -46,7 +44,6 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                // Run Terraform plan with user inputs
                 sh '''
                 terraform plan \
                     -var "bucket-name=${params.TF_VAR_bucket_name}" \
@@ -73,7 +70,6 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                // Apply the Terraform configuration with user inputs
                 sh '''
                 terraform apply \
                     -var "bucket-name=${params.TF_VAR_bucket_name}" \
