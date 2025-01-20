@@ -1,35 +1,33 @@
+# Bucket Name
 variable "bucket-name" {
-
-  description = "name of the bucket"
+  description = "Name of the S3 bucket"
   type        = string
-
 }
 
+# AWS Region
 variable "region" {
-
-  description = "aws region for the bucket"
+  description = "AWS region for the S3 bucket"
   type        = string
-
 }
 
+# Bucket Tags
 variable "tags" {
-
-  description = "tags for the s3 bucket"
+  description = "Tags for the S3 bucket"
   type        = map(string)
 
   default = {
-    "name" = "value"
+    "Owner"      = "DefaultOwner"
+    "Environment" = "dev"
   }
-
 }
 
+# Bucket Policy
 variable "bucket_policy" {
-
   description = "JSON bucket policy"
   type        = string
-
 }
 
+# Additional Parameters
 variable "wk_data_classification" {
   description = "Data classification (e.g., restricted)"
   type        = string
@@ -56,17 +54,17 @@ variable "wk_bu_code" {
 }
 
 variable "wk_business_owner" {
-  description = "Business owner email (e.g., satish.vellanki@wolterskluwer.com)"
+  description = "Business owner email"
   type        = string
 }
 
 variable "wk_requestor" {
-  description = "Requestor email (e.g., mark.chlan@wolterskluwer.com)"
+  description = "Requestor email"
   type        = string
 }
 
 variable "map_migrated" {
-  description = "Migrated map (e.g., mig0SUXNUWWVF)"
+  description = "Migrated map"
   type        = string
 }
 
@@ -76,7 +74,7 @@ variable "wk_environment_type" {
 }
 
 variable "wk_technical_owner" {
-  description = "Technical owner email (e.g., mark.chlan@wolterskluwer.com)"
+  description = "Technical owner email"
   type        = string
 }
 
@@ -86,12 +84,12 @@ variable "resourcecount" {
 }
 
 variable "wk_application_name" {
-  description = "Application name (e.g., sap ecc 6.0 backbone)"
+  description = "Application name"
   type        = string
 }
 
 variable "wk_application_bit_id" {
-  description = "Application bit ID (e.g., 041800000PB1)"
+  description = "Application bit ID"
   type        = string
 }
 
@@ -106,15 +104,12 @@ variable "wk_patch_class" {
 }
 
 variable "wk_infra_support_group" {
-  description = "Infra support group (e.g., wk_na_gbs_aws_systemsupport infrastructure)"
+  description = "Infra support group"
   type        = string
 }
 
-#create s3 bucket
-
-
+# S3 Bucket Resource
 resource "aws_s3_bucket" "s3_bucket" {
-
   bucket = var.bucket-name
 
   tags = var.tags
@@ -131,18 +126,14 @@ resource "aws_s3_bucket" "s3_bucket" {
     enabled = false
   }
 }
-#attach bucket policy
 
+# Bucket Policy Resource
 resource "aws_s3_bucket_policy" "bucket_policy" {
-
-  bucket = aws_s3_bucket.s3_bucket
+  bucket = aws_s3_bucket.s3_bucket.bucket
   policy = var.bucket_policy
-
 }
 
-#output bucket details
-
-
+# Outputs
 output "bucket_name" {
   value = aws_s3_bucket.s3_bucket.bucket
 }
@@ -171,6 +162,3 @@ output "user_inputs" {
     wk_infra_support_group = var.wk_infra_support_group
   }
 }
-
-
-
