@@ -1,33 +1,26 @@
-# Bucket Name
-variable "bucket-name" {
+variable "bucket_name" {
   description = "Name of the S3 bucket"
   type        = string
 }
 
-# AWS Region
 variable "region" {
-  description = "AWS region for the S3 bucket"
+  description = "AWS region for the bucket"
   type        = string
 }
 
-# Bucket Tags
 variable "tags" {
   description = "Tags for the S3 bucket"
   type        = map(string)
-
   default = {
-    "Owner"      = "DefaultOwner"
-    "Environment" = "dev"
+    "name" = "value"
   }
 }
 
-# Bucket Policy
 variable "bucket_policy" {
-  description = "JSON bucket policy"
+  description = "JSON-formatted bucket policy"
   type        = string
 }
 
-# Additional Parameters
 variable "wk_data_classification" {
   description = "Data classification (e.g., restricted)"
   type        = string
@@ -54,17 +47,17 @@ variable "wk_bu_code" {
 }
 
 variable "wk_business_owner" {
-  description = "Business owner email"
+  description = "Business owner email (e.g., satish.vellanki@wolterskluwer.com)"
   type        = string
 }
 
 variable "wk_requestor" {
-  description = "Requestor email"
+  description = "Requestor email (e.g., mark.chlan@wolterskluwer.com)"
   type        = string
 }
 
 variable "map_migrated" {
-  description = "Migrated map"
+  description = "Migrated map (e.g., mig0SUXNUWWVF)"
   type        = string
 }
 
@@ -74,7 +67,7 @@ variable "wk_environment_type" {
 }
 
 variable "wk_technical_owner" {
-  description = "Technical owner email"
+  description = "Technical owner email (e.g., mark.chlan@wolterskluwer.com)"
   type        = string
 }
 
@@ -84,12 +77,12 @@ variable "resourcecount" {
 }
 
 variable "wk_application_name" {
-  description = "Application name"
+  description = "Application name (e.g., sap ecc 6.0 backbone)"
   type        = string
 }
 
 variable "wk_application_bit_id" {
-  description = "Application bit ID"
+  description = "Application bit ID (e.g., 041800000PB1)"
   type        = string
 }
 
@@ -104,61 +97,6 @@ variable "wk_patch_class" {
 }
 
 variable "wk_infra_support_group" {
-  description = "Infra support group"
+  description = "Infra support group (e.g., wk_na_gbs_aws_systemsupport infrastructure)"
   type        = string
-}
-
-# S3 Bucket Resource
-resource "aws_s3_bucket" "s3_bucket" {
-  bucket = var.bucket-name
-
-  tags = var.tags
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-
-  versioning {
-    enabled = false
-  }
-}
-
-# Bucket Policy Resource
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.s3_bucket.bucket
-  policy = var.bucket_policy
-}
-
-# Outputs
-output "bucket_name" {
-  value = aws_s3_bucket.s3_bucket.bucket
-}
-
-output "bucket_arn" {
-  value = aws_s3_bucket.s3_bucket.arn
-}
-
-output "user_inputs" {
-  value = {
-    wk_data_classification = var.wk_data_classification
-    wk_resource_name       = var.wk_resource_name
-    wk_division_code       = var.wk_division_code
-    wk_app_support_group   = var.wk_app_support_group
-    wk_bu_code             = var.wk_bu_code
-    wk_business_owner      = var.wk_business_owner
-    wk_requestor           = var.wk_requestor
-    map_migrated           = var.map_migrated
-    wk_environment_type    = var.wk_environment_type
-    wk_technical_owner     = var.wk_technical_owner
-    resourcecount          = var.resourcecount
-    wk_application_name    = var.wk_application_name
-    wk_application_bit_id  = var.wk_application_bit_id
-    wk_environment_name    = var.wk_environment_name
-    wk_patch_class         = var.wk_patch_class
-    wk_infra_support_group = var.wk_infra_support_group
-  }
 }
